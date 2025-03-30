@@ -8,6 +8,7 @@ import (
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source/file"
+	_ "github.com/joho/godotenv/autoload"
 	_ "github.com/tursodatabase/libsql-client-go/libsql"
 )
 
@@ -28,7 +29,7 @@ func main() {
 	switch environment {
 	case "local":
 		dbURL = "file:local.db" // URL do banco de dados local
-	case "TURSO_PRODUCTION":
+	case "TURSO_DATABASE":
 		url := os.Getenv("TURSO_DATABASE_URL")
 		token := os.Getenv("TURSO_AUTH_TOKEN")
 		if url == "" || token == "" {

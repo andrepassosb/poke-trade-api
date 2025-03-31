@@ -5,6 +5,7 @@ import (
 	"log"
 	"os"
 
+	"github.com/andrepassosb/poke-trade-api/database"
 	"github.com/golang-migrate/migrate/v4"
 	"github.com/golang-migrate/migrate/v4/database/sqlite3"
 	"github.com/golang-migrate/migrate/v4/source/file"
@@ -17,28 +18,8 @@ func main() {
 		log.Fatal("Please provide a migration direction: 'up' or 'down'")
 	}
 	direction := os.Args[1]
-	environment := "local" // valor padrão
 
-
-	if env := os.Getenv("DATABASE_ENV"); env != "" {
-		environment = env
-	}
-
-
-	var dbURL string
-	switch environment {
-	case "local":
-		dbURL = "file:local.db" // URL do banco de dados local
-	case "TURSO_DATABASE":
-		url := os.Getenv("TURSO_DATABASE_URL")
-		token := os.Getenv("TURSO_AUTH_TOKEN")
-		if url == "" || token == "" {
-			log.Fatal("TURSO_DATABASE_URL and TURSO_AUTH_TOKEN must be set for remote environment")
-		}
-		dbURL = url + "?auth_token=" + token
-	default:
-		log.Fatal("Invalid environment. Use 'local' or 'TURSO_PRODUCTION'.")
-	}
+	dbURL := database.GetURL()
 
 
 	db, err := sql.Open("libsql", dbURL)

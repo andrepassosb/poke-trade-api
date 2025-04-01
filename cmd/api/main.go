@@ -1,4 +1,4 @@
-package main
+package api
 
 import (
 	"database/sql"
@@ -18,7 +18,7 @@ type application struct {
 	models    database.Models
 }
 
-func main() {
+func Main() {
 	url := database.GetURL()
 
 	db, err := sql.Open("libsql", url)

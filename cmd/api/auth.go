@@ -1,6 +1,7 @@
 package api
 
 import (
+	"log"
 	"net/http"
 	"time"
 
@@ -58,6 +59,7 @@ func (app *application) registerUser(c *gin.Context) {
 
 	err = app.models.Users.Insert(&user)
 	if err != nil {
+		log.Printf("Error: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Could not create user"})
 		return
 	}

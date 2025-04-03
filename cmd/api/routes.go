@@ -18,7 +18,17 @@ func (app *application) routes() http.Handler {
 		v1.POST("/auth/login", app.login)
 		v1.GET("users", app.getAllUsers)
 		v1.GET("users/:id", app.getUserByID)
-		
+
+	}
+
+	
+	authGroup := v1.Group("/")
+	authGroup.Use(app.AuthMiddleware())
+	{
+		authGroup.POST("/friends", app.addFriend)
+		authGroup.GET("/friends", app.getFriends)
+		authGroup.GET("/friends/:friendId", app.getFriendByID)
+		authGroup.DELETE("/friends/:friendId", app.deleteFriend)
 	}
 
 

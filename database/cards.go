@@ -38,7 +38,7 @@ func (m *CardModel) InsertOrUpdate(userID int, cardID string, quantity int) erro
 		return err
 	}
 
-	// Se nenhuma linha foi atualizada, significa que não existe, então insere um novo
+	// Se nenhuma linha foi atualizada, insere um novo registro
 	if rowsAffected == 0 {
 		insertQuery := "INSERT INTO user_cards (user_id, card_id, quantity) VALUES (?, ?, ?)"
 		_, err = m.DB.ExecContext(ctx, insertQuery, userID, cardID, quantity)

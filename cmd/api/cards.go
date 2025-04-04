@@ -5,19 +5,31 @@ import (
 	"net/http"
 	"strconv"
 
-	"github.com/andrepassosb/poke-trade-api/database"
-
 	"github.com/gin-gonic/gin"
 )
 
-type addCardRequest struct {
+type CardUpdate struct {
 	UserID   int    `json:"user_id"`
-	CardID string `json:"card_id" binding:"required"`
+	CardID   string `json:"card_id" binding:"required"`
 	Quantity int    `json:"quantity" binding:"required"`
 }
 
+// Inicia o worker de atualização dos cards
+func (app *application) startCardUpdateWorker() {
+	go func() {
+		for update := range app.cardUpdateQueue {
+			log.Printf("Processing card update: %+v", update)
+			err := app.models.Cards.InsertOrUpdate(update.UserID, update.CardID, update.Quantity)
+			if err != nil {
+				log.Printf("Error processing card update: %v", err)
+			}
+		}
+	}()
+}
+
+// Adiciona a atualização do card à fila de updates
 func (app *application) updateCardList(c *gin.Context) {
-	var request addCardRequest
+	var request CardUpdate
 
 	if err := c.ShouldBindJSON(&request); err != nil {
 		if err.Error() == "EOF" {
@@ -30,18 +42,14 @@ func (app *application) updateCardList(c *gin.Context) {
 
 	user := app.GetUserFromContext(c)
 
-	card := database.Card{
+	update := CardUpdate{
 		UserID:   user.Id,
 		CardID:   request.CardID,
 		Quantity: request.Quantity,
 	}
 
-	err := app.models.Cards.InsertOrUpdate(card.UserID, card.CardID, card.Quantity)
-	if err != nil {
-		log.Printf("Error inserting card: %v", err)
-		c.JSON(http.StatusInternalServerError, gin.H{"error": "Something went wrong", "details": err.Error()})
-		return
-	}
+	// Adiciona a atualização na fila
+	app.cardUpdateQueue <- update
 
 	c.JSON(http.StatusOK, gin.H{"message": "Card updated successfully"})
 }

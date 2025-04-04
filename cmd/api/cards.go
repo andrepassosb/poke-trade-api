@@ -70,5 +70,8 @@ func (app *application) getAllCards(c *gin.Context) {
 		return
 	}
 
-	c.JSON(http.StatusOK, gin.H{"cards": cards})
+	c.JSON(http.StatusOK, gin.H{
+		"user_id": intID,
+		"cards":   cards,
+	})
 }

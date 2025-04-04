@@ -13,7 +13,6 @@ type CardModel struct {
 
 type Card struct {
 	CardID  string	`json:"card_id"`
-	UserID  int 	`json:"user_id"`
 	Quantity int 	`json:"quantity"`
 }
 

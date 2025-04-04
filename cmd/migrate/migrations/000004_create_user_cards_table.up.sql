@@ -1,4 +1,4 @@
-CREATE TABLE user_cards_new (
+CREATE TABLE user_cards (
     user_id INTEGER NOT NULL,
     card_id TEXT NOT NULL,
     quantity INTEGER NOT NULL CHECK (quantity >= 0),

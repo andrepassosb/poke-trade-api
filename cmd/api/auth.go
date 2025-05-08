@@ -36,6 +36,8 @@ func (app *application) registerUser(c *gin.Context) {
 
 	hashedPassword, err := bcrypt.GenerateFromPassword([]byte(register.Password), bcrypt.DefaultCost)
 	if err != nil {
+		//create a log entry for the error
+		log.Printf("Error hashing password: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"Error": "Something went wrong"})
 		return
 	}

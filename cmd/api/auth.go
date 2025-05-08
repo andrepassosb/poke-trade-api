@@ -51,6 +51,8 @@ func (app *application) registerUser(c *gin.Context) {
 	// Check if user already exists
 	existingUser, err := app.models.Users.GetByUser(register.Username)
 	if err != nil {
+		//create a log entry for the error
+		log.Printf("Error checking for existing user: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Something went wrong"})	
 		return
 	}
@@ -83,6 +85,7 @@ func (app *application) login(c *gin.Context) {
 	}
 
 	if err != nil {
+		log.Printf("Error checking for existing user: %v", err)
 		c.JSON(http.StatusInternalServerError, gin.H{"error": "Something went wrong"})
 		return
 	}

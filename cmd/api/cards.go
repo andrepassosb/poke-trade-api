@@ -28,7 +28,7 @@ func (app *application) startCardUpdateWorker() {
 }
 
 // Adiciona a atualização do card à fila de updates
-func (app *application) updateCardList(c *gin.Context) {
+func (app *application) updateCard(c *gin.Context) {
 	var request CardUpdate
 
 	if err := c.ShouldBindJSON(&request); err != nil {
@@ -53,6 +53,33 @@ func (app *application) updateCardList(c *gin.Context) {
 
 	c.JSON(http.StatusOK, gin.H{"message": "Card updated successfully"})
 }
+
+func (app *application) updateMultipleCards(c *gin.Context) {
+	var requests []CardUpdate
+
+	if err := c.ShouldBindJSON(&requests); err != nil {
+		if err.Error() == "EOF" {
+			c.JSON(http.StatusBadRequest, gin.H{"error": "Request body is empty"})
+			return
+		}
+		c.JSON(http.StatusBadRequest, gin.H{"error": err.Error()})
+		return
+	}
+
+	user := app.GetUserFromContext(c)
+
+	for _, req := range requests {
+		update := CardUpdate{
+			UserID:   user.Id,
+			CardID:   req.CardID,
+			Quantity: req.Quantity,
+		}
+		app.cardUpdateQueue <- update
+	}
+
+	c.JSON(http.StatusOK, gin.H{"message": "Cards updated successfully"})
+}
+
 
 func (app *application) getAllCards(c *gin.Context) {
 	id := c.Param("id")

@@ -25,7 +25,7 @@ func (m *CardModel) InsertOrUpdate(userID int, cardID string, quantity int) erro
 	defer cancel()
 
 	// Tenta atualizar a quantidade se o registro já existir
-	updateQuery := "UPDATE user_cards SET quantity = quantity + ? WHERE user_id = ? AND card_id = ?"
+	updateQuery := "UPDATE user_cards SET quantity = ? WHERE user_id = ? AND card_id = ?"
 	res, err := m.DB.ExecContext(ctx, updateQuery, quantity, userID, cardID)
 	if err != nil {
 		return err

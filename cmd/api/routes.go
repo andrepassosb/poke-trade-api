@@ -29,7 +29,8 @@ func (app *application) routes() http.Handler {
 		authGroup.GET("/friends", app.getFriends)
 		authGroup.GET("/friends/:friendId", app.getFriendByID)
 		authGroup.DELETE("/friends/:friendId", app.deleteFriend)
-		authGroup.POST("/cards/", app.updateCardList)
+		authGroup.POST("/card/", app.updateCard)
+		authGroup.POST("/cards/", app.updateMultipleCards)
 	}
 
 

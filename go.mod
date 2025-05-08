@@ -1,6 +1,6 @@
 module github.com/andrepassosb/poke-trade-api
 
-go 1.24.1
+go 1.24.0
 
 require (
 	github.com/golang-migrate/migrate/v4 v4.18.2
@@ -25,7 +25,6 @@ require (
 	github.com/json-iterator/go v1.1.12 // indirect
 	github.com/klauspost/cpuid/v2 v2.2.7 // indirect
 	github.com/leodido/go-urn v1.4.0 // indirect
-	github.com/libsql/sqlite-antlr4-parser v0.0.0-20240327125255-dbf53b6cbf06 // indirect
 	github.com/mattn/go-isatty v0.0.20 // indirect
 	github.com/modern-go/concurrent v0.0.0-20180306012644-bacd9c7ef1dd // indirect
 	github.com/modern-go/reflect2 v1.0.2 // indirect
@@ -53,7 +52,6 @@ require (
 	github.com/hashicorp/go-multierror v1.1.1 // indirect
 	github.com/joho/godotenv v1.5.1
 	github.com/mattn/go-sqlite3 v1.14.22 // indirect
-	github.com/tursodatabase/go-libsql v0.0.0-20250313100617-0ab5a1a61a71
 	github.com/tursodatabase/libsql-client-go v0.0.0-20240902231107-85af5b9d094d
 	go.uber.org/atomic v1.7.0 // indirect
 	modernc.org/sqlite v1.37.0

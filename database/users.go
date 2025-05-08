@@ -25,6 +25,34 @@ func (m *UserModel) Insert(user *User) error {
 	return m.DB.QueryRowContext(ctx, query, user.Username, user.Password).Scan(&user.Id)
 }
 
+func (m *UserModel) GetAll() ([]*User, error) {
+	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
+	defer cancel()
+
+	query := "SELECT * FROM users"
+
+	rows, err := m.DB.QueryContext(ctx, query)
+	if err != nil {
+		return nil, err
+	}
+	defer rows.Close()
+
+	var users []*User
+	for rows.Next() {
+		var user User
+		if err := rows.Scan(&user.Id, &user.Username, &user.Password); err != nil {
+			return nil, err
+		}
+		users = append(users, &user)
+	}
+
+	if err := rows.Err(); err != nil {
+		return nil, err
+	}
+
+	return users, nil
+}
+
 func (m *UserModel) getUser(query string, args ...interface{}) (*User, error) {
 	ctx, cancel := context.WithTimeout(context.Background(), 3*time.Second)
 	defer cancel()
@@ -42,12 +70,12 @@ func (m *UserModel) getUser(query string, args ...interface{}) (*User, error) {
 	return &user, nil
 }
 
-func (m *UserModel) Get(id int) (*User, error) {
-	query := "SELECT * FROM users WHERE id = $1"
+func (m *UserModel) GetByID(id int) (*User, error) {
+	query := "SELECT * FROM users WHERE id = ?"
 	return m.getUser(query, id)
 }
 
 func (m *UserModel) GetByUser(username string) (*User, error) {
-	query := "SELECT * FROM users WHERE username = $1"
+	query := "SELECT * FROM users WHERE username = ?"
 	return m.getUser(query, username)
 }

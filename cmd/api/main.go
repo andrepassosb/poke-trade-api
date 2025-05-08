@@ -16,6 +16,7 @@ type application struct {
 	port      int
 	jwtSecret string
 	models    database.Models
+	cardUpdateQueue chan CardUpdate // Adicionando o canal
 }
 
 func Main() {
@@ -33,7 +34,10 @@ func Main() {
 		port:      8080,
 		jwtSecret: os.Getenv("JWT_SECRET"),
 		models:    models,
+		cardUpdateQueue: make(chan CardUpdate, 100), // Buffer de 100 updates
 	}
+
+	go app.startCardUpdateWorker()
 
 	if err := app.serve(); err != nil {
 		log.Fatal(err)
